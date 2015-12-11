@@ -1,0 +1,22 @@
+{
+  "name": "todo_challenge",
+  "version": "1.0.0",
+  "description": "To Do MVC weekend challenge",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "karma start test/karma-conf.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thisdotrob/todo_challenge.git"
+  },
+  "author": "this.rob",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thisdotrob/todo_challenge/issues"
+  },
+  "homepage": "https://github.com/thisdotrob/todo_challenge#readme"
+}
