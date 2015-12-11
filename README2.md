@@ -1,10 +1,12 @@
 ToDo challenge
 ===
-To run tests
+Initial setup
 ---
 0. ```git clone git@github.com:thisdotrob/todo_challenge.git```
 0. ```npm install```
-0. ```webdriver-manager update```
-0. ```webdriver-manager start```
-0. ```protractor ./test/e2e/conf.js```
-0. ```karma start ./test/karma-conf.js```
+0. ```bower install```
+
+E2E tests
+---
+0. ```./node_modules/protractor/bin/webdriver-manager update```
+0. ```gulp e2e```
