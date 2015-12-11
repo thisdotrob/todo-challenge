@@ -4,8 +4,13 @@ describe('ToDo app', function() {
     browser.get('http://localhost:8080');
   });
 
-  it('should have the correct page title', function() {
+  it('has the correct title', function() {
     expect(browser.getTitle()).toEqual('ToDo');
   });
 
-})
+  it('has a task input field', function() {
+    var inputField = element(by.id('input'));
+    expect(inputField.isPresent()).toBe(true);
+  });
+
+});

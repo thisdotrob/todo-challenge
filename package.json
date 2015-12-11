@@ -7,7 +7,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "karma start test/karma-conf.js"
+    "test": "gulp e2e"
   },
   "repository": {
     "type": "git",
