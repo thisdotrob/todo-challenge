@@ -1,9 +1,9 @@
-toDo.controller('ToDoController', [function() {
+toDo.controller('ToDoController', ['Submit', function(Submit) {
 
   var self = this;
 
   self.addToDo = function() {
-    self.submittedToDo = self.draftToDo;
+    Submit.post(self.draftToDo);
   }
 
 }]);

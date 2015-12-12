@@ -2,6 +2,7 @@ ToDo challenge
 ===
 Initial setup
 ---
+0. ```export NODE_ENV=development```
 0. ```git clone git@github.com:thisdotrob/todo_challenge.git```
 0. ```npm install```
 0. ```bower install```

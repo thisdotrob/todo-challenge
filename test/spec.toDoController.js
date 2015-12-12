@@ -1,22 +1,34 @@
 describe('ToDoController', function() {
 
+  var ctrl;
+  var httpBackend;
+  var scope;
+
+  var submitSpy = jasmine.createSpyObj('submitSpy', ['post']);
+  var task = 'Thing to do';
+
   beforeEach(module('ToDo'));
 
-  var ctrl;
-
-  beforeEach(inject(function($controller) {
-    ctrl = $controller('ToDoController');
+  beforeEach(inject(function($rootScope, $controller, $httpBackend) {
+    var scope = $rootScope.$new()
+    ctrl = $controller('ToDoController', {
+      $scope: scope,
+      Submit: submitSpy
+    });
+    httpBackend = $httpBackend;
   }));
 
   it('initialises with an empty todo list', function() {
     expect(ctrl.todo).toBeUndefined();
   });
 
-  it('stores a submitted todo', function() {
-    var taskStr = 'I need to do this';
-    ctrl.draftToDo = taskStr;
+  it('passes a submitted task to the submit factory', function() {
+    ctrl.draftToDo = task;
     ctrl.addToDo();
-    expect(ctrl.submittedToDo).toEqual(taskStr);
+    expect(submitSpy.post).toHaveBeenCalledWith(task);
   });
+
+
+
 
 });
