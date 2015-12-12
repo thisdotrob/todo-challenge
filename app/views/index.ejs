@@ -4,11 +4,10 @@
   <% include ../views/partials/head %>
 </head>
 
-<body>
-
+<body ng-controller="ToDoController as ctrl">
 <form>
-  <input id='input'></input>
-
+  <input ng-model="ctrl.draftToDo"></input>
+  <button id="submit-btn" ng-click="ctrl.addToDo()">Add</button>
 </form>
-
+<span ng-bind="ctrl.submittedToDo"></span>
 </body>

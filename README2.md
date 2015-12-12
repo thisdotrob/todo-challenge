@@ -6,7 +6,8 @@ Initial setup
 0. ```npm install```
 0. ```bower install```
 
-E2E tests
+Tests
 ---
 0. ```./node_modules/protractor/bin/webdriver-manager update```
 0. ```gulp e2e```
+0. ```gulp unit```

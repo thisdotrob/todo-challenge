@@ -9,8 +9,17 @@ describe('ToDo app', function() {
   });
 
   it('has a task input field', function() {
-    var inputField = element(by.id('input'));
+    var inputField = element(by.model('ctrl.draftToDo'));
     expect(inputField.isPresent()).toBe(true);
   });
+
+  it('displays an added task', function() {
+    var taskStr = 'I need to do this';
+    var input = element(by.model('ctrl.draftToDo'));
+    var output = element(by.binding('ctrl.submittedToDo'));
+    input.sendKeys(taskStr);
+    element(by.id('submit-btn')).click();
+    expect(output.getText()).toEqual(taskStr)
+  })
 
 });
