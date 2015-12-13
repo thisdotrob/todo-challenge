@@ -5,6 +5,6 @@ module.exports = function() {
   app.use(express.static('./public'));
   app.set('views', './app/views');
   app.set('view engine', 'ejs');
-  require('../app/routes/index.server.routes.js')(app);
+  require('../app/controllers/index.server.controller.js')(app);
   return app;
 }

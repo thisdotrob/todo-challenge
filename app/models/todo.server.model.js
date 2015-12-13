@@ -5,4 +5,4 @@ var toDoSchema = new Schema({
   task: String
 });
 
-mongoose.model('ToDo', toDoSchema);
+module.exports = mongoose.model('ToDo', toDoSchema);
