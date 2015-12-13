@@ -2,7 +2,7 @@ var gulp = require('gulp');
 var protractor = require('gulp-protractor').protractor;
 var server = require('gulp-develop-server');
 var karmaServer = require('karma').Server;
-var jasmineNode = require('gulp-jasmine-node');
+var mocha = require('gulp-mocha');
 
 gulp.task('e2e', function() {
   server.listen( { path: './server.js' } );
@@ -21,10 +21,9 @@ gulp.task('karma', function() {
   }).start();
 });
 
-gulp.task('jasmine-node', function () {
-    return gulp.src(['test/unit/node/spec.*.js']).pipe(jasmineNode({
-        timeout: 10000
-    }));
-});
+gulp.task('mocha', function() {
+  return gulp.src('./test/unit/node/spec.*.js', {read: false})
+    .pipe(mocha());
+})
 
-gulp.task('unit', ['karma','jasmine-node'])
+gulp.task('unit', ['karma', 'mocha']);
