@@ -1,12 +1,12 @@
 module.exports = function(config) {
   config.set({
-    basePath: '../',
+    basePath: '../../../',
     frameworks: ['jasmine'],
     files: [
       'public/bower_components/angular/angular.js',
       'public/bower_components/angular-mocks/angular-mocks.js',
       'public/js/**/*.js',
-      'test/**/spec.*.js'
+      'test/unit/angular/spec.*.js'
     ],
     reporters: ['progress'],
     port: 8080,

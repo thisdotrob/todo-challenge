@@ -16,13 +16,13 @@ gulp.task('e2e', function() {
 
 gulp.task('karma', function() {
   new karmaServer({
-    configFile: __dirname + '/test/karma-conf.js',
+    configFile: __dirname + '/test/unit/angular/karma-conf.js',
     singleRun: true
   }).start();
 });
 
 gulp.task('jasmine-node', function () {
-    return gulp.src(['test/spec/**/*spec.js']).pipe(jasmineNode({
+    return gulp.src(['test/unit/node/spec.*.js']).pipe(jasmineNode({
         timeout: 10000
     }));
 });
