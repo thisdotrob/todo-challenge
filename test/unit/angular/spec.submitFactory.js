@@ -14,10 +14,10 @@ describe('submitFactory', function() {
      httpBackend.verifyNoOutstandingRequest();
    });
 
-  it('submits a POST on ToDo submission', function() {
+  it('submits a new todo', function() {
     var task = 'Thing to do';
-    httpBackend.expectPOST('/', {task: task}).respond(200, 'success');
-    submit.post(task);
+    httpBackend.expectPOST('/new', {task: task}).respond(200, 'success');
+    submit.new(task);
     httpBackend.flush();
   });
 

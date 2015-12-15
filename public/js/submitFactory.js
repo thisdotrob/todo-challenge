@@ -1,7 +1,7 @@
 toDo.factory('Submit', ['$http', function($http) {
   return {
-    post: function(task) {
-      return $http.post('/', {task: task});
+    new: function(task) {
+      return $http.post('/new', {task: task});
     }
   };
 }])

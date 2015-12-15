@@ -1,31 +1,59 @@
+var utils = require('./../utils');
+var ToDo = require('mongoose').model('ToDo');
+
 describe('ToDo app', function() {
 
-  beforeEach(function() {
-    browser.get('http://localhost:8080');
-  });
-
   it('has the correct title', function() {
+    browser.get('http://localhost:8080');
     expect(browser.getTitle()).toEqual('ToDo');
   });
 
-  it('displays an added task', function() {
-    var taskStr = 'I need to do this';
-    var input = element(by.model('ctrl.draftToDo'));
-    var output = element(by.binding('ctrl.submittedToDo'));
-    input.sendKeys(taskStr);
+  it('can add a task', function(done) {
+    browser.get('http://localhost:8080');
+    var expected = 'I need to do this';
+    element(by.model('ctrl.draftToDo')).sendKeys(expected);
     element(by.id('submit-btn')).click();
-    expect(output.getText()).toEqual(taskStr)
+    var toDo = element.all(by.id('todo-list')).first();
+    expect(toDo.getText()).toEqual(expected);
+    done();
   })
 
-  it('persists an added task', function() {
-    var task = 'A thing to do';
-    var input = element(by.model('ctrl.draftToDo'));
-    var output = element(by.binding('ctrl.submittedToDo'));
-    input.sendKeys(task);
-    element(by.id('submit-btn')).click();
-    expect(output.getText()).toEqual(task);
-    browser.refresh();
-    expect(output.getText()).toEqual(task);
+  it('loads pre-entered tasks on page load', function(done) {
+    var expected = ['task1','task2','task3'];
+    var result = [];
+    var count = 0;
+
+    var startTest = function() {
+      browser.get('http://localhost:8080');
+      var els = element.all(by.repeater('toDo in ctrl.toDos'));
+      for (var i = 0; i < expected.length; i++) {
+        els.get(i).getText().then(compileResult);
+      }
+    }
+
+    var compileResult = function(text) {
+      result.push(text);
+      count--;
+      if(count === 0){
+        evaluate();
+      }
+    }
+
+    var evaluate = function() {
+      expect(result).toEqual(expected);
+      done();
+    }
+
+    var callback = function(err, createdTodo) {
+      count++;
+      if(count === expected.length) {
+        startTest();
+      }
+    }
+
+    for (var i = 0; i < expected.length; i++) {
+        ToDo.create({task: expected[i]}, callback)
+    }
   })
 
 });

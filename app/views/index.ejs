@@ -9,5 +9,8 @@
   <input ng-model="ctrl.draftToDo"></input>
   <button id="submit-btn" ng-click="ctrl.addToDo()">Add</button>
 </form>
+<ul id="todo-list" ng-repeat="toDo in ctrl.toDos">
+  <li>{{toDo.task}}</li>
+</ul>
 <span ng-bind="ctrl.submittedToDo"></span>
 </body>

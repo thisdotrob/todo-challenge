@@ -4,7 +4,8 @@ describe('ToDoController', function() {
   var httpBackend;
   var scope;
 
-  var submitSpy = jasmine.createSpyObj('submitSpy', ['post']);
+  var submitSpy = jasmine.createSpyObj('submitSpy', ['new']);
+  var listSpy = jasmine.createSpyObj('listSpy', ['todos']);
   var task = 'Thing to do';
 
   beforeEach(module('ToDo'));
@@ -13,7 +14,8 @@ describe('ToDoController', function() {
     var scope = $rootScope.$new()
     ctrl = $controller('ToDoController', {
       $scope: scope,
-      Submit: submitSpy
+      Submit: submitSpy,
+      List: listSpy
     });
     httpBackend = $httpBackend;
   }));
@@ -25,10 +27,12 @@ describe('ToDoController', function() {
   it('passes a submitted task to the submit factory', function() {
     ctrl.draftToDo = task;
     ctrl.addToDo();
-    expect(submitSpy.post).toHaveBeenCalledWith(task);
+    expect(submitSpy.new).toHaveBeenCalledWith(task);
   });
 
-
-
+  it('delegates requesting todos to the list factory', function() {
+    ctrl.getToDos();
+    expect(listSpy.todos).toHaveBeenCalled();
+  })
 
 });

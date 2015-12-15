@@ -1,17 +1,19 @@
-toDo.controller('ToDoController', ['Submit', '$http', function(Submit, $http) {
+toDo.controller('ToDoController', ['Submit', 'List', '$http', function(Submit, List, $http) {
 
   var self = this;
 
-  $http({
-    url: '/todos',
-    method: 'GET',
-  }).then(function(res) {
-    self.todos = res.data;
-    console.log(self.todos);
-  })
-
   self.addToDo = function() {
-    Submit.post(self.draftToDo);
-  }
+    console.log('draftToDo: ' + self.draftToDo);
+    Submit.new(self.draftToDo);
+    self.getToDos();
+  };
+
+  self.getToDos = function() {
+    List.toDos().then(function(res) {
+      self.toDos = res.data;
+    });
+  };
+
+  self.getToDos();
 
 }]);
