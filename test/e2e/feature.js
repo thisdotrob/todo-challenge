@@ -3,57 +3,53 @@ var ToDo = require('mongoose').model('ToDo');
 
 describe('ToDo app', function() {
 
-  it('has the correct title', function() {
-    browser.get('http://localhost:8080');
-    expect(browser.getTitle()).toEqual('ToDo');
-  });
+  describe('No ToDo\'s in the database', function() {
 
-  it('can add a task', function(done) {
-    browser.get('http://localhost:8080');
-    var expected = 'I need to do this';
-    element(by.model('ctrl.draftToDo')).sendKeys(expected);
-    element(by.id('submit-btn')).click();
-    var toDo = element.all(by.id('todo-list')).first();
-    expect(toDo.getText()).toEqual(expected);
-    done();
-  })
+    beforeEach(function (done) {utils.clearDB(done)});
+    afterEach(function (done) {utils.disconnectDB(done)});
 
-  it('loads pre-entered tasks on page load', function(done) {
-    var expected = ['task1','task2','task3'];
-    var result = [];
-    var count = 0;
-
-    var startTest = function() {
+    it('has the correct title', function() {
       browser.get('http://localhost:8080');
-      var els = element.all(by.repeater('toDo in ctrl.toDos'));
-      for (var i = 0; i < expected.length; i++) {
-        els.get(i).getText().then(compileResult);
-      }
-    }
+      expect(browser.getTitle()).toEqual('ToDo');
+    });
 
-    var compileResult = function(text) {
-      result.push(text);
-      count--;
-      if(count === 0){
-        evaluate();
-      }
-    }
-
-    var evaluate = function() {
-      expect(result).toEqual(expected);
+    it('can add a task', function(done) {
+      browser.get('http://localhost:8080');
+      var expected = 'I need to do this';
+      element(by.model('ctrl.draftToDo')).sendKeys(expected);
+      element(by.id('submit-btn')).click();
+      var toDo = element.all(by.id('todo-list')).first();
+      expect(toDo.getText()).toEqual(expected);
       done();
-    }
-
-    var callback = function(err, createdTodo) {
-      count++;
-      if(count === expected.length) {
-        startTest();
-      }
-    }
-
-    for (var i = 0; i < expected.length; i++) {
-        ToDo.create({task: expected[i]}, callback)
-    }
+    })
   })
+
+  describe('Pre-existing ToDo\'s in the database', function() {
+
+    beforeEach(function (done) {utils.clearDB(done)});
+    beforeEach(function (done) {utils.seedDB(done)});
+    afterEach(function (done) {utils.disconnectDB(done)});
+
+    it('loads pre-entered tasks on page load', function(done) {
+      browser.get('http://localhost:8080');
+      var elements = element.all(by.repeater('toDo in ctrl.toDos'));
+      elements.count().then(function(count) {
+        var resultsPushed = 0;
+        var result = [];
+        for(var i = 0; i < count; i++) {
+          elements.get(i).getText().then(pushResult);
+        }
+        function pushResult(text) {
+          result.push(text);
+          resultsPushed ++;
+          if(resultsPushed === count) {
+            expect(result).toEqual(['Task 0', 'Task 1', 'Task 2']);
+            done();
+          }
+        }
+      });
+    });
+
+  });
 
 });
