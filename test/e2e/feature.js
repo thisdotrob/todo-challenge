@@ -18,11 +18,12 @@ describe('ToDo app', function() {
       var expected = 'I need to do this';
       element(by.model('ctrl.draftToDo')).sendKeys(expected);
       element(by.id('submit-btn')).click();
-      var toDo = element.all(by.id('todo-list')).first();
-      expect(toDo.getText()).toEqual(expected);
-      done();
-    })
-  })
+      element(by.id('task')).getText().then(function(text) {
+        expect(text).toEqual(expected);
+        done();
+      });
+    });
+  });
 
   describe('Pre-existing ToDo\'s in the database', function() {
 
@@ -37,7 +38,7 @@ describe('ToDo app', function() {
         var resultsPushed = 0;
         var result = [];
         for(var i = 0; i < count; i++) {
-          elements.get(i).getText().then(pushResult);
+          elements.get(i).element(by.id('task')).getText().then(pushResult);
         }
         function pushResult(text) {
           result.push(text);
@@ -47,6 +48,17 @@ describe('ToDo app', function() {
             done();
           }
         }
+      });
+    });
+
+    it('can delete a task', function(done) {
+      browser.get('http://localhost:8080');
+      var elements = element.all(by.repeater('toDo in ctrl.toDos'));
+      elements.first().element(by.id('delete-btn')).click().then(function() {
+        elements.count().then(function(count) {
+          expect(count).toEqual(2);
+          done();
+        })
       });
     });
 

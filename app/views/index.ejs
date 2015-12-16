@@ -10,7 +10,10 @@
   <button id="submit-btn" ng-click="ctrl.addToDo()">Add</button>
 </form>
 <ul id="todo-list" ng-repeat="toDo in ctrl.toDos">
-  <li>{{toDo.task}}</li>
+  <li>
+    <span id="task">{{toDo.task}}</span>
+    <button id="delete-btn" ng-click"ctrl.deleteToDo(toDo)">Delete</button>
+  </li>
 </ul>
 <span ng-bind="ctrl.submittedToDo"></span>
 </body>

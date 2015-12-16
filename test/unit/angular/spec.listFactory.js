@@ -22,7 +22,7 @@ describe('listFactory', function() {
       ]
     }
     httpBackend.expectGET('/list').respond(data);
-    list.todos();
+    list.toDos();
     httpBackend.flush();
   })
 

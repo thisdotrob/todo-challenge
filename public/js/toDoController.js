@@ -1,9 +1,8 @@
-toDo.controller('ToDoController', ['Submit', 'List', '$http', function(Submit, List, $http) {
+toDo.controller('ToDoController', ['Submit', 'List', 'Delete', '$http', function(Submit, List, Delete, $http) {
 
   var self = this;
 
   self.addToDo = function() {
-    console.log('draftToDo: ' + self.draftToDo);
     Submit.new(self.draftToDo);
     self.getToDos();
   };
@@ -13,6 +12,11 @@ toDo.controller('ToDoController', ['Submit', 'List', '$http', function(Submit, L
       self.toDos = res.data;
     });
   };
+
+  self.deleteToDo = function(toDo) {
+    Delete.remove(toDo);
+    self.getToDos();
+  }
 
   self.getToDos();
 
