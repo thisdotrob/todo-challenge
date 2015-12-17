@@ -21,7 +21,7 @@ describe('listFactory', function() {
         {task: 'task 2'}
       ]
     }
-    httpBackend.expectGET('/list').respond(data);
+    httpBackend.expectGET('/list').respond(200, data);
     list.toDos();
     httpBackend.flush();
   })

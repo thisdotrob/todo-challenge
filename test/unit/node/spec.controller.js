@@ -4,6 +4,9 @@ var ToDo = require('mongoose').model('ToDo');
 var should = require('should');
 var client = request.createClient('http://localhost:8080');
 
+beforeEach(function (done) {utils.clearDB(done)});
+afterEach(function (done) {utils.disconnectDB(done)});
+
 describe('controller', function() {
 
   it('responds to root', function(done) {
@@ -40,10 +43,22 @@ describe('controller', function() {
         })
       }
     }
-
     for (var i = tasks.length; i > 0; i--) {
         ToDo.create({task: tasks[i-1]}, callback);
     }
+  });
+
+  it('deletes a todo', function(done) {
+    ToDo.create({task: 'task0'}, function(err, createdToDo){
+      client.post('/delete', createdToDo, function(err, res, body) {
+        res.statusCode.should.equal(200);
+        ToDo.count({}, function(err, count) {
+          count.should.equal(0);
+          done();
+        });
+      });
+    });
   })
+
 
 });

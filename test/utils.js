@@ -4,26 +4,24 @@ var mongoose = require('mongoose');
 var ToDo = mongoose.model('ToDo');
 
 exports.clearDB = function(done) {
-
   function clear(done) {
     for (var i in mongoose.connection.collections) {
       mongoose.connection.collections[i].remove(function() {});
     }
     return done();
   }
-
   if (mongoose.connection.readyState === 0) {
     mongoose.connect(config.db, function (err) {
       if (err) {throw err}
       return clear(done);
     });
   } else {return clear(done)}
-
 }
 
 exports.disconnectDB = function(done) {
-  mongoose.disconnect();
-  return done();
+  mongoose.disconnect(function() {
+    return done();
+  });
 }
 
 exports.seedDB = function(done) {

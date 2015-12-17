@@ -18,7 +18,7 @@ describe('ToDo app', function() {
       var expected = 'I need to do this';
       element(by.model('ctrl.draftToDo')).sendKeys(expected);
       element(by.id('submit-btn')).click();
-      element(by.id('task')).getText().then(function(text) {
+      element(by.css('.task')).getText().then(function(text) {
         expect(text).toEqual(expected);
         done();
       });
@@ -27,9 +27,15 @@ describe('ToDo app', function() {
 
   describe('Pre-existing ToDo\'s in the database', function() {
 
-    beforeEach(function (done) {utils.clearDB(done)});
-    beforeEach(function (done) {utils.seedDB(done)});
-    afterEach(function (done) {utils.disconnectDB(done)});
+    beforeEach(function (done) {
+      utils.clearDB(function() {
+        utils.seedDB(done);
+      });
+    });
+
+    afterEach(function (done) {
+      utils.disconnectDB(done);
+    });
 
     it('loads pre-entered tasks on page load', function(done) {
       browser.get('http://localhost:8080');
@@ -38,7 +44,7 @@ describe('ToDo app', function() {
         var resultsPushed = 0;
         var result = [];
         for(var i = 0; i < count; i++) {
-          elements.get(i).element(by.id('task')).getText().then(pushResult);
+          elements.get(i).element(by.css('.task')).getText().then(pushResult);
         }
         function pushResult(text) {
           result.push(text);
@@ -54,7 +60,7 @@ describe('ToDo app', function() {
     it('can delete a task', function(done) {
       browser.get('http://localhost:8080');
       var elements = element.all(by.repeater('toDo in ctrl.toDos'));
-      elements.first().element(by.id('delete-btn')).click().then(function() {
+      elements.first().element(by.css('.delete-btn')).click().then(function() {
         elements.count().then(function(count) {
           expect(count).toEqual(2);
           done();

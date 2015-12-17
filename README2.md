@@ -10,5 +10,6 @@ Initial setup
 Tests
 ---
 0. ```./node_modules/protractor/bin/webdriver-manager update```
-0. ```gulp e2e```
-0. ```gulp unit```
+0. ```gulp e2e``` for feature tests.
+0. ```gulp karma``` for angular unit tests.
+0. ```gulp mocha``` for node unit tests.

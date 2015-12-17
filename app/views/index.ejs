@@ -11,8 +11,8 @@
 </form>
 <ul id="todo-list" ng-repeat="toDo in ctrl.toDos">
   <li>
-    <span id="task">{{toDo.task}}</span>
-    <button id="delete-btn" ng-click"ctrl.deleteToDo(toDo)">Delete</button>
+    <span class="task">{{toDo.task}}</span>
+    <button class="delete-btn" ng-click="ctrl.deleteToDo(toDo)">Delete</button>
   </li>
 </ul>
 <span ng-bind="ctrl.submittedToDo"></span>

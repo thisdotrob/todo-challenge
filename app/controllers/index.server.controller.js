@@ -23,3 +23,15 @@ exports.create = function(req, res) {
     }
   });
 };
+
+exports.remove = function(req, res) {
+  ToDo.remove({_id: req.body._id}, function (err) {
+    if(err) {
+      res.json(err);
+    } else {
+      ToDo.find({}, function(err, data) {
+      })
+      res.status(200).json('success');
+    }
+  })
+}
