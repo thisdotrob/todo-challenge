@@ -44,3 +44,14 @@ exports.update = function(req, res) {
     }
   }
 }
+
+exports.categorise = function(req, res) {
+  ToDo.update({_id: req.body._id}, { $set: { category: req.body.category }}, cb);
+  function cb(err) {
+    if(err) {
+      res.json(err);
+    } else {
+      res.sendStatus(200);
+    }
+  }
+}

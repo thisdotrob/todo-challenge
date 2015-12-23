@@ -8,6 +8,7 @@ describe('ToDoController', function() {
   var listSpy = jasmine.createSpyObj('listSpy', ['toDos']);
   var deleteSpy = jasmine.createSpyObj('deleteSpy', ['remove']);
   var editSpy = jasmine.createSpyObj('editSpy', ['selectForEditing', 'editToDo']);
+  var categoriseSpy = jasmine.createSpyObj('categoriseSpy', ['selectForCategorising', 'addCategory']);
   var task = 'Thing to do';
 
   beforeEach(module('ToDo'));
@@ -20,7 +21,8 @@ describe('ToDoController', function() {
       Submit: submitSpy,
       List: listSpy,
       Delete: deleteSpy,
-      Edit: editSpy
+      Edit: editSpy,
+      Categorise: categoriseSpy
     });
     httpBackend = $httpBackend;
 
@@ -46,16 +48,30 @@ describe('ToDoController', function() {
     expect(deleteSpy.remove).toHaveBeenCalledWith(task);
   });
 
-  it('shows the edit field for a selected task via edit factory', function() {
-    ctrl.showEditField(task);
+  it('shows the edit field for a selected todo', function() {
+    expect(ctrl.editing).toBe(false);
+    ctrl.showEditPanel(task);
     expect(editSpy.selectForEditing).toHaveBeenCalledWith(task);
+    expect(ctrl.editing).toBe(true);
   });
 
-  it('delegates editig todos to the edit factory', function() {
-    ctrl.editToDo(task);
+  it('delegates editing todos to the edit factory', function() {
+    ctrl.editedTask = task;
+    ctrl.editToDo();
     expect(editSpy.editToDo).toHaveBeenCalledWith(task);
-  })
+  });
 
+  it('shows the categorise field for a selected todo', function() {
+    expect(ctrl.categorising).toBe(false);
+    ctrl.showCategorisePanel(task);
+    expect(categoriseSpy.selectForCategorising).toHaveBeenCalledWith(task);
+    expect(ctrl.categorising).toBe(true);
+  });
 
+  it('delegates categorising todos to the categorise factory', function() {
+    ctrl.category = 'Category0';
+    ctrl.categoriseToDo();
+    expect(categoriseSpy.addCategory).toHaveBeenCalledWith('Category0');
+  });
 
 });

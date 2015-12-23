@@ -6,4 +6,5 @@ module.exports = function(app) {
   app.route('/new').post(index.create);
   app.route('/delete').post(index.remove);
   app.route('/edit').post(index.update);
+  app.route('/category').post(index.categorise);
 };

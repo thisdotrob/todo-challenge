@@ -76,5 +76,21 @@ describe('controller', function() {
     })
   })
 
+  it('adds a category to a todo', function(done) {
+    ToDo.create({task: 'task0'}, function(err, createdToDo) {
+      var data = {
+        _id: createdToDo.id,
+        category: 'Category0'
+      }
+      client.post('/category', data, function(err, res, body) {
+        res.statusCode.should.equal(200);
+        ToDo.findById(data._id, function(err, found) {
+          found.category.should.eql(data.category);
+          done();
+        })
+      })
+    })
+  })
+
 
 });

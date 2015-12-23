@@ -1,7 +1,6 @@
-toDo.controller('ToDoController', ['Submit', 'List', 'Delete', 'Edit', '$http', function(Submit, List, Delete, Edit, $http) {
+toDo.controller('ToDoController', ['Submit', 'List', 'Delete', 'Edit', 'Categorise', '$http', function(Submit, List, Delete, Edit, Categorise, $http) {
 
   var self = this;
-  var editing = false;
 
   self.addToDo = function() {
     Submit.new(self.draftToDo);
@@ -19,17 +18,34 @@ toDo.controller('ToDoController', ['Submit', 'List', 'Delete', 'Edit', '$http', 
     self.getToDos();
   }
 
-  self.showEditField = function(toDo) {
-    Edit.selectForEditing(toDo);
+  self.showEditPanel = function(toDo) {
     self.editing = true;
+    Edit.selectForEditing(toDo);
   }
 
   self.editToDo = function() {
-    Edit.editToDo(self.editedTask);
     self.editing = false;
+    Edit.editToDo(self.editedTask);
     self.getToDos();
   }
 
-  self.getToDos();
+  self.showCategorisePanel = function(toDo) {
+    self.categorising = true;
+    Categorise.selectForCategorising(toDo);
+  }
+
+  self.categoriseToDo = function() {
+    self.categorising = false;
+    Categorise.addCategory(self.category);
+    self.getToDos();
+  }
+
+  self.init = function() {
+    self.editing = false;
+    self.categorising = false;
+    self.getToDos();
+  }
+
+  self.init();
 
 }]);
