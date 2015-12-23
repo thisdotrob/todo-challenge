@@ -15,7 +15,7 @@ exports.list = function(req, res) {
 }
 
 exports.create = function(req, res) {
-  ToDo.create({task: req.body.task}, function (err, toDo) {
+  ToDo.create({task: req.body.task}, function(err, toDo) {
     if(err) {
       res.json(err);
     } else {
@@ -25,13 +25,22 @@ exports.create = function(req, res) {
 };
 
 exports.remove = function(req, res) {
-  ToDo.remove({_id: req.body._id}, function (err) {
+  ToDo.remove({_id: req.body._id}, function(err) {
     if(err) {
       res.json(err);
     } else {
-      ToDo.find({}, function(err, data) {
-      })
       res.status(200).json('success');
     }
   })
+}
+
+exports.update = function(req, res) {
+  ToDo.update({_id: req.body._id}, { $set: { task: req.body.task }}, cb);
+  function cb(err) {
+    if(err) {
+      res.json(err);
+    } else {
+      res.sendStatus(200);
+    }
+  }
 }

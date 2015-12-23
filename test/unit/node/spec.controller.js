@@ -60,5 +60,21 @@ describe('controller', function() {
     });
   })
 
+  it('edits a todo', function(done) {
+    ToDo.create({task: 'task0'}, function(err, createdToDo) {
+      var data = {
+        _id: createdToDo.id,
+        task: 'updated task'
+      }
+      client.post('/edit', data, function(err, res, body) {
+        res.statusCode.should.equal(200);
+        ToDo.findById(data._id, function(err, found) {
+          found.task.should.eql(data.task);
+          done();
+        })
+      })
+    })
+  })
+
 
 });

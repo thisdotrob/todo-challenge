@@ -17,7 +17,7 @@ describe('ToDo app', function() {
       browser.get('http://localhost:8080');
       var expected = 'I need to do this';
       element(by.model('ctrl.draftToDo')).sendKeys(expected);
-      element(by.id('submit-btn')).click();
+      element(by.id('submit-delete-btn')).click();
       element(by.css('.task')).getText().then(function(text) {
         expect(text).toEqual(expected);
         done();
@@ -67,6 +67,22 @@ describe('ToDo app', function() {
         })
       });
     });
+
+    it('can edit a task', function(done) {
+      browser.get('http://localhost:8080');
+      var elem = element.all(by.repeater('toDo in ctrl.toDos')).last();
+      elem.element(by.css('.edit-btn')).click().then(function() {
+        element(by.model('ctrl.editedTask')).sendKeys('Edited task')
+          .then(function() {
+            element(by.id('submit-edit-btn')).click().then(function() {
+              elem.element(by.css('.task')).getText().then(function(text) {
+                expect(text).toEqual('Edited task');
+                done();
+              })
+            })
+          })
+      })
+    })
 
   });
 

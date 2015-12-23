@@ -7,13 +7,20 @@
 <body ng-controller="ToDoController as ctrl">
 <form>
   <input ng-model="ctrl.draftToDo"></input>
-  <button id="submit-btn" ng-click="ctrl.addToDo()">Add</button>
+  <button id="submit-delete-btn" ng-click="ctrl.addToDo()">Add</button>
 </form>
 <ul id="todo-list" ng-repeat="toDo in ctrl.toDos">
   <li>
     <span class="task">{{toDo.task}}</span>
     <button class="delete-btn" ng-click="ctrl.deleteToDo(toDo)">Delete</button>
+    <button class="edit-btn" ng-click="ctrl.showEditField(toDo)">Edit</button>
   </li>
 </ul>
 <span ng-bind="ctrl.submittedToDo"></span>
+<div id="edit-panel" ng-show="ctrl.editing">
+  <form>
+    <input ng-model="ctrl.editedTask"></input>
+    <button id="submit-edit-btn" ng-click="ctrl.editToDo()">Edit</button>
+  </form>
+</div>
 </body>
