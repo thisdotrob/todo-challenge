@@ -25,7 +25,13 @@ describe('ToDoController', function() {
       Categorise: categoriseSpy
     });
     httpBackend = $httpBackend;
+  }));
 
+  beforeEach(inject(function($q) {
+    submitSpy.new.and.returnValue($q.when({}));
+    categoriseSpy.addCategory.and.returnValue($q.when({}));
+    deleteSpy.remove.and.returnValue($q.when({}));
+    editSpy.editToDo.and.returnValue($q.when({}));
   }));
 
   it('initialises with an empty todo list', function() {

@@ -3,8 +3,7 @@ toDo.controller('ToDoController', ['Submit', 'List', 'Delete', 'Edit', 'Categori
   var self = this;
 
   self.addToDo = function() {
-    Submit.new(self.draftToDo);
-    self.getToDos();
+    Submit.new(self.draftToDo).then(self.getToDos);
   };
 
   self.getToDos = function() {
@@ -14,8 +13,7 @@ toDo.controller('ToDoController', ['Submit', 'List', 'Delete', 'Edit', 'Categori
   };
 
   self.deleteToDo = function(toDo) {
-    Delete.remove(toDo);
-    self.getToDos();
+    Delete.remove(toDo).then(self.getToDos);
   }
 
   self.showEditPanel = function(toDo) {
@@ -25,8 +23,7 @@ toDo.controller('ToDoController', ['Submit', 'List', 'Delete', 'Edit', 'Categori
 
   self.editToDo = function() {
     self.editing = false;
-    Edit.editToDo(self.editedTask);
-    self.getToDos();
+    Edit.editToDo(self.editedTask).then(self.getToDos);
   }
 
   self.showCategorisePanel = function(toDo) {
@@ -36,8 +33,7 @@ toDo.controller('ToDoController', ['Submit', 'List', 'Delete', 'Edit', 'Categori
 
   self.categoriseToDo = function() {
     self.categorising = false;
-    Categorise.addCategory(self.category);
-    self.getToDos();
+    Categorise.addCategory(self.category).then(self.getToDos);
   }
 
   self.init = function() {
