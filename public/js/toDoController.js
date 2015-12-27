@@ -1,45 +1,46 @@
-toDo.controller('ToDoController', ['Submit', 'List', 'Delete', 'Edit', 'Categorise', '$http', function(Submit, List, Delete, Edit, Categorise, $http) {
+toDo.controller('ToDoController', ['New', 'Get', 'Delete', 'Edit', '$http', function(New, Get, Delete, Edit, $http) {
 
   var self = this;
 
-  self.addToDo = function() {
-    Submit.new(self.draftToDo).then(self.getToDos);
-  };
+  self.init = function() {
+    self.editing = false;
+    self.creating = false;
+    self.list();
+  }
 
-  self.getToDos = function() {
-    List.toDos().then(function(res) {
+  self.list = function() {
+    Get.toDos().then(function(res) {
       self.toDos = res.data;
     });
   };
 
-  self.deleteToDo = function(toDo) {
-    Delete.remove(toDo).then(self.getToDos);
+  self.new = function() {
+    self.creating = true;
   }
 
-  self.showEditPanel = function(toDo) {
+  self.edit = function(toDo) {
+    Edit.select(toDo);
+    self.editedTask = toDo.task;
+    self.editedCategory = toDo.category;
     self.editing = true;
-    Edit.selectForEditing(toDo);
   }
 
-  self.editToDo = function() {
+  self.add = function() {
+    New.toDo(self.task, self.category).then(function() {
+      self.creating = false;
+      self.task = null;
+      self.category = null;
+      self.list();
+    });
+  };
+
+  self.save = function() {
     self.editing = false;
-    Edit.editToDo(self.editedTask).then(self.getToDos);
+    Edit.save(self.editedTask, self.editedCategory).then(self.list);
   }
 
-  self.showCategorisePanel = function(toDo) {
-    self.categorising = true;
-    Categorise.selectForCategorising(toDo);
-  }
-
-  self.categoriseToDo = function() {
-    self.categorising = false;
-    Categorise.addCategory(self.category).then(self.getToDos);
-  }
-
-  self.init = function() {
-    self.editing = false;
-    self.categorising = false;
-    self.getToDos();
+  self.delete = function(toDo) {
+    Delete.remove(toDo).then(self.list);
   }
 
   self.init();

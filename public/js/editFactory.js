@@ -2,13 +2,14 @@ toDo.factory('Edit', ['$http', function($http) {
   var currentToDo;
 
   return {
-    selectForEditing: function(toDo) {
+    select: function(toDo) {
       this.toDo = toDo;
     },
-    editToDo: function(updatedTask) {
+    save: function(task, category) {
       var data = {
         _id: this.toDo._id,
-        task: updatedTask
+        task: task,
+        category: category
       }
       return $http.post('/edit', data);
     }

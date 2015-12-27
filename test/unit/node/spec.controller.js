@@ -16,23 +16,13 @@ describe('controller', function() {
     });
   });
 
-  it('submits a new todo', function(done) {
-    var task = 'A thing to do';
-    client.post('/new', {task: task}, function(err, res, body) {
-      res.statusCode.should.equal(200);
-      should.not.exist(err);
-      body.task.should.equal(task);
-      done();
-    });
-  });
-
   it('returns a list of stored todos', function(done) {
     var tasks = ['task1','task2','task3'];
     var callbackCount = 0;
     var callback = function() {
       callbackCount++;
       if(callbackCount === tasks.length) {
-        client.get('/list', function(err, res, body) {
+        client.get('/todos', function(err, res, body) {
           var returnedTasks = body.map(function(todo) {
             return todo.task;
           }).sort();
@@ -44,12 +34,28 @@ describe('controller', function() {
       }
     }
     for (var i = tasks.length; i > 0; i--) {
-        ToDo.create({task: tasks[i-1]}, callback);
+        ToDo.create({task: tasks[i-1], category: 'A category'}, callback);
     }
   });
 
+  it('submits a new todo', function(done) {
+    var data = {
+      task: 'A thing to do',
+      category: 'A category'
+    };
+    client.post('/new', data, function(err, res, body) {
+      res.statusCode.should.equal(200);
+      should.not.exist(err);
+      body.task.should.equal(data.task);
+      body.category.should.equal(data.category);
+      should.exist(body._id);
+      done();
+    });
+  });
+
   it('deletes a todo', function(done) {
-    ToDo.create({task: 'task0'}, function(err, createdToDo){
+    ToDo.create({task: 'task0', category: 'category0'}, cb);
+    function cb(err, createdToDo) {
       client.post('/delete', createdToDo, function(err, res, body) {
         res.statusCode.should.equal(200);
         ToDo.count({}, function(err, count) {
@@ -57,40 +63,26 @@ describe('controller', function() {
           done();
         });
       });
-    });
-  })
+    }
+  });
 
   it('edits a todo', function(done) {
-    ToDo.create({task: 'task0'}, function(err, createdToDo) {
+    ToDo.create({task: 'task0', category: 'category0'}, cb);
+    function cb(err, createdToDo) {
       var data = {
         _id: createdToDo.id,
-        task: 'updated task'
+        task: 'updated task',
+        category: 'updated category'
       }
       client.post('/edit', data, function(err, res, body) {
         res.statusCode.should.equal(200);
         ToDo.findById(data._id, function(err, found) {
           found.task.should.eql(data.task);
-          done();
-        })
-      })
-    })
-  })
-
-  it('adds a category to a todo', function(done) {
-    ToDo.create({task: 'task0'}, function(err, createdToDo) {
-      var data = {
-        _id: createdToDo.id,
-        category: 'Category0'
-      }
-      client.post('/category', data, function(err, res, body) {
-        res.statusCode.should.equal(200);
-        ToDo.findById(data._id, function(err, found) {
           found.category.should.eql(data.category);
           done();
         })
       })
-    })
-  })
-
+    }
+  });
 
 });

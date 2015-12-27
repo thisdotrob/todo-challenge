@@ -1,12 +1,12 @@
-describe('submitFactory', function() {
+describe('newFactory', function() {
   var httpBackend;
-  var submit;
+  var newFactory;
 
   beforeEach(module('ToDo'));
 
-  beforeEach(inject(function($httpBackend, Submit) {
+  beforeEach(inject(function($httpBackend, New) {
     httpBackend = $httpBackend;
-    submit = Submit;
+    newFactory = New;
   }));
 
   afterEach(function() {
@@ -16,8 +16,11 @@ describe('submitFactory', function() {
 
   it('submits a new todo', function() {
     var task = 'Thing to do';
-    httpBackend.expectPOST('/new', {task: task}).respond(200, 'success');
-    submit.new(task);
+    var category = 'A category';
+    httpBackend
+      .expectPOST('/new', {task: task, category: category})
+      .respond(200);
+    newFactory.toDo(task, category);
     httpBackend.flush();
   });
 

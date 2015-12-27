@@ -4,7 +4,7 @@ exports.root = function(req, res) {
   res.render('index');
 };
 
-exports.list = function(req, res) {
+exports.todos = function(req, res) {
   ToDo.find({}).exec(function(err, data) {
     if(err) {
       res.json(err);
@@ -14,8 +14,10 @@ exports.list = function(req, res) {
   });
 }
 
-exports.create = function(req, res) {
-  ToDo.create({task: req.body.task}, function(err, toDo) {
+exports.new = function(req, res) {
+  var task = req.body.task;
+  var category = req.body.category;
+  ToDo.create({task: task, category: category}, function(err, toDo) {
     if(err) {
       res.json(err);
     } else {
@@ -24,7 +26,23 @@ exports.create = function(req, res) {
   });
 };
 
-exports.remove = function(req, res) {
+exports.edit = function(req, res) {
+  var _id = req.body._id;
+  var task = req.body.task;
+  var category = req.body.category;
+
+  ToDo.update({_id: _id}, { $set: { task: task, category: category }}, cb);
+
+  function cb(err) {
+    if(err) {
+      res.json(err);
+    } else {
+      res.sendStatus(200);
+    }
+  }
+}
+
+exports.delete = function(req, res) {
   ToDo.remove({_id: req.body._id}, function(err) {
     if(err) {
       res.json(err);
@@ -32,26 +50,4 @@ exports.remove = function(req, res) {
       res.status(200).json('success');
     }
   })
-}
-
-exports.update = function(req, res) {
-  ToDo.update({_id: req.body._id}, { $set: { task: req.body.task }}, cb);
-  function cb(err) {
-    if(err) {
-      res.json(err);
-    } else {
-      res.sendStatus(200);
-    }
-  }
-}
-
-exports.categorise = function(req, res) {
-  ToDo.update({_id: req.body._id}, { $set: { category: req.body.category }}, cb);
-  function cb(err) {
-    if(err) {
-      res.json(err);
-    } else {
-      res.sendStatus(200);
-    }
-  }
 }

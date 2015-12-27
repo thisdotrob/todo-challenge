@@ -2,9 +2,10 @@ describe('editFactory', function() {
   var httpBackend;
   var edit;
 
-  var task = {
-    _id: '12345',
-    task: 'Thing to do'
+  var toDo = {
+    _id: 12345,
+    task: 'Thing to do',
+    category: 'A category'
   };
 
   beforeEach(module('ToDo'));
@@ -15,18 +16,20 @@ describe('editFactory', function() {
   }));
 
   it('selects a todo for editing', function() {
-    edit.selectForEditing(task);
-    expect(edit.toDo).toEqual(task);
+    edit.select(toDo);
+    expect(edit.toDo).toEqual(toDo);
   });
 
   it('edits a todo', function() {
-    edit.selectForEditing(task);
-    httpBackend
-      .expectPOST('/edit', '{"_id":"12345","task":"Updated thing to do"}')
-      .respond(200,'');
-    edit.editToDo('Updated thing to do');
+    var data = {
+      _id: 12345,
+      task: 'Updated thing to do',
+      category: 'Updated category'
+    };
+    edit.select(toDo);
+    httpBackend.expectPOST('/edit', data).respond(200);
+    edit.save('Updated thing to do', 'Updated category');
     httpBackend.flush();
-  })
-
+  });
 
 });

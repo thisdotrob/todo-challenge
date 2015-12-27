@@ -6,33 +6,30 @@
 
 <body ng-controller="ToDoController as ctrl">
 
-<form>
-  <input ng-model="ctrl.draftToDo"></input>
-  <button id="submit-delete-btn" ng-click="ctrl.addToDo()">Add</button>
-</form>
+<button class="new-btn" ng-click="ctrl.new()">New</button>
 
 <ul id="todo-list" ng-repeat="toDo in ctrl.toDos">
   <li>
     <span class="task">{{toDo.task}}</span>
-    |
     <span class="category">{{toDo.category}}</span>
-    <button class="delete-btn" ng-click="ctrl.deleteToDo(toDo)">Delete</button>
-    <button class="edit-btn" ng-click="ctrl.showEditPanel(toDo)">Edit</button>
-    <button class="categorise-btn" ng-click="ctrl.showCategorisePanel(toDo)">Add Category</button>
+    <button class="delete-btn" ng-click="ctrl.delete(toDo)">Delete</button>
+    <button class="edit-btn" ng-click="ctrl.edit(toDo)">Edit</button>
   </li>
 </ul>
 
-<div id="edit-panel" ng-show="ctrl.editing">
+<div id="edit-dialogue" ng-show="ctrl.editing">
   <form>
     <input ng-model="ctrl.editedTask"></input>
-    <button id="submit-edit-btn" ng-click="ctrl.editToDo()">Edit</button>
+    <input ng-model="ctrl.editedCategory"></input>
+    <button class="save-btn" ng-click="ctrl.save()">Save</button>
   </form>
 </div>
 
-<div id="categorise-panel" ng-show="ctrl.categorising">
+<div id="new-dialogue" ng-show="ctrl.creating">
   <form>
+    <input ng-model="ctrl.task"></input>
     <input ng-model="ctrl.category"></input>
-    <button id="add-category-btn" ng-click="ctrl.categoriseToDo()">Add Category</button>
+    <button class="add-btn" ng-click="ctrl.add()">Add</button>
   </form>
 </div>
 

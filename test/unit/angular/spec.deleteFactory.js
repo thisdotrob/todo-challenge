@@ -2,6 +2,12 @@ describe('deleteFactory', function() {
   var httpBackend;
   var del;
 
+  var toDo = {
+    _id: 12345,
+    task: 'Thing to do',
+    category: 'A category'
+  };
+
   beforeEach(module('ToDo'));
 
   beforeEach(inject(function($httpBackend, Delete) {
@@ -12,13 +18,12 @@ describe('deleteFactory', function() {
   afterEach(function() {
     httpBackend.verifyNoOutstandingExpectation();
     httpBackend.verifyNoOutstandingRequest();
-  })
+  });
 
   it('deletes the specified todo', function() {
-    httpBackend.expectPOST('/delete', 'item to delete')
-      .respond(200, '');
-    del.remove('item to delete');
+    httpBackend.expectPOST('/delete', toDo).respond(200);
+    del.remove(toDo);
     httpBackend.flush();
-  })
+  });
 
-})
+});

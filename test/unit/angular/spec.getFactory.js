@@ -1,12 +1,12 @@
-describe('listFactory', function() {
+describe('getFactory', function() {
   var httpBackend;
-  var list;
+  var get;
 
   beforeEach(module('ToDo'));
 
-  beforeEach(inject(function($httpBackend, List) {
+  beforeEach(inject(function($httpBackend, Get) {
     httpBackend = $httpBackend;
-    list = List;
+    get = Get;
   }));
 
   afterEach(function() {
@@ -15,14 +15,8 @@ describe('listFactory', function() {
   });
 
   it('retrieves the list of todos', function() {
-    var data = {
-      todos: [
-        {task: 'task 1'},
-        {task: 'task 2'}
-      ]
-    }
-    httpBackend.expectGET('/list').respond(200, data);
-    list.toDos();
+    httpBackend.expectGET('/todos').respond(200);
+    get.toDos();
     httpBackend.flush();
   })
 

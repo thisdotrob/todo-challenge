@@ -3,25 +3,41 @@ var ToDo = require('mongoose').model('ToDo');
 
 describe('ToDo app', function() {
 
+  it('has the correct title', function() {
+    browser.get('http://localhost:8080');
+    expect(browser.getTitle()).toEqual('ToDo');
+  });
+
+  it('does not display the edit or new dialogues', function() {
+    browser.get('http://localhost:8080');
+    var editDialogue = element(by.id('edit-dialogue'));
+    var newDialogue = element(by.id('new-dialogue'));
+    expect(editDialogue.isDisplayed()).toBeFalsy();
+    expect(newDialogue.isDisplayed()).toBeFalsy();
+  })
+
   describe('No ToDo\'s in the database', function() {
 
     beforeEach(function (done) {utils.clearDB(done)});
     afterEach(function (done) {utils.disconnectDB(done)});
 
-    it('has the correct title', function() {
-      browser.get('http://localhost:8080');
-      expect(browser.getTitle()).toEqual('ToDo');
-    });
-
     it('can add a task', function(done) {
+      var task = 'I need to do this';
+      var category = 'Some category';
       browser.get('http://localhost:8080');
-      var expected = 'I need to do this';
-      element(by.model('ctrl.draftToDo')).sendKeys(expected);
-      element(by.id('submit-delete-btn')).click();
-      element(by.css('.task')).getText().then(function(text) {
-        expect(text).toEqual(expected);
-        done();
-      });
+      element(by.css('.new-btn')).click().then(function() {
+        element(by.model('ctrl.task')).sendKeys(task);
+        element(by.model('ctrl.category')).sendKeys(category);
+        element(by.css('.add-btn')).click().then(function() {
+          element(by.css('.task')).getText().then(function(text) {
+            expect(text).toEqual(task);
+            element(by.css('.category')).getText().then(function(text2) {
+              expect(text2).toEqual(category);
+              done();
+            })
+          });
+        })
+      })
     });
   });
 
@@ -39,20 +55,20 @@ describe('ToDo app', function() {
       utils.disconnectDB(done);
     });
 
-    it('loads pre-entered tasks on page load', function(done) {
+    it('displays pre-entered tasks on page load', function(done) {
       browser.get('http://localhost:8080');
       var elements = element.all(by.repeater('toDo in ctrl.toDos'));
       elements.count().then(function(count) {
         var resultsPushed = 0;
-        var result = [];
+        var results = [];
         for(var i = 0; i < count; i++) {
           elements.get(i).element(by.css('.task')).getText().then(pushResult);
         }
         function pushResult(text) {
-          result.push(text);
+          results.push(text);
           resultsPushed ++;
           if(resultsPushed === count) {
-            expect(result).toEqual(['Task 0', 'Task 1', 'Task 2']);
+            expect(results).toEqual(['Task 0', 'Task 1', 'Task 2']);
             done();
           }
         }
@@ -71,37 +87,36 @@ describe('ToDo app', function() {
     });
 
     it('can edit a task', function(done) {
+      var task = 'I need to do this differently';
+      var category = 'Some other category';
       browser.get('http://localhost:8080');
-      var elem = element.all(by.repeater('toDo in ctrl.toDos')).last();
-      elem.element(by.css('.edit-btn')).click().then(function() {
-        element(by.model('ctrl.editedTask')).sendKeys('Edited task')
-          .then(function() {
-            element(by.id('submit-edit-btn')).click().then(function() {
-              elem.element(by.css('.task')).getText().then(function(text) {
-                expect(text).toEqual('Edited task');
-                done();
-              })
-            })
-          })
-      })
-    })
+      var toDo = element.all(by.repeater('toDo in ctrl.toDos')).last();
+      toDo.element(by.css('.edit-btn')).click().then(enterDetails);
 
-    it('can assign a category to a task', function(done) {
-      browser.get('http://localhost:8080');
-      var elem = element.all(by.repeater('toDo in ctrl.toDos')).last();
-      elem.element(by.css('.categorise-btn')).click().then(function() {
-        element(by.model('ctrl.category')).sendKeys('Category1')
-          .then(function() {
-            element(by.id('add-category-btn')).click().then(function() {
-              elem.element(by.css('.category')).getText().then(function(text) {
-                expect(text).toEqual('Category1');
-                done();
+      function enterDetails() {
+        var taskField = element(by.model('ctrl.editedTask'));
+        var categoryField = element(by.model('ctrl.editedCategory'));
+        taskField.clear().then(function() {
+          taskField.sendKeys(task).then(function() {
+            categoryField.clear().then(function() {
+              categoryField.sendKeys(category).then(function() {
+                element(by.css('.save-btn')).click().then(evaluate);
               })
             })
           })
-      })
+        })
+      }
+
+      function evaluate() {
+        toDo.element(by.css('.task')).getText().then(function(text) {
+          expect(text).toEqual(task);
+          toDo.element(by.css('.category')).getText().then(function(text) {
+            expect(text).toEqual(category);
+            done();
+          })
+        })
+      }
     })
 
   });
-
 });
