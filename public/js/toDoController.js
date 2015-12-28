@@ -39,8 +39,8 @@ toDo.controller('ToDoController', ['New', 'Get', 'Delete', 'Edit', '$http', func
     Edit.save(self.editedTask, self.editedCategory).then(self.list);
   }
 
-  self.delete = function(toDo) {
-    Delete.remove(toDo).then(self.list);
+  self.delete = function() {
+    Delete.remove(self.selection).then(self.list);
   }
 
   self.init();

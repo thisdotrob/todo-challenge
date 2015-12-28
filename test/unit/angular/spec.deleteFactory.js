@@ -2,10 +2,9 @@ describe('deleteFactory', function() {
   var httpBackend;
   var del;
 
-  var toDo = {
-    _id: 12345,
-    task: 'Thing to do',
-    category: 'A category'
+  var selection = {
+    '01234': true,
+    '56789': false,
   };
 
   beforeEach(module('ToDo'));
@@ -21,8 +20,8 @@ describe('deleteFactory', function() {
   });
 
   it('deletes the specified todo', function() {
-    httpBackend.expectPOST('/delete', toDo).respond(200);
-    del.remove(toDo);
+    httpBackend.expectPOST('/delete', selection).respond(200);
+    del.remove(selection);
     httpBackend.flush();
   });
 

@@ -10,12 +10,14 @@
 
 <ul id="todo-list" ng-repeat="toDo in ctrl.toDos">
   <li>
+    <input class="checkbox" type="checkbox" ng-model="ctrl.selection[toDo._id]">
     <span class="task">{{toDo.task}}</span>
     <span class="category">{{toDo.category}}</span>
-    <button class="delete-btn" ng-click="ctrl.delete(toDo)">Delete</button>
     <button class="edit-btn" ng-click="ctrl.edit(toDo)">Edit</button>
   </li>
 </ul>
+
+<button class="delete-btn" ng-click="ctrl.delete()">Delete</button>
 
 <div id="edit-dialogue" ng-show="ctrl.editing">
   <form>
@@ -32,5 +34,7 @@
     <button class="add-btn" ng-click="ctrl.add()">Add</button>
   </form>
 </div>
+
+<pre ng-bind="ctrl.selection | json"></pre>
 
 </body>

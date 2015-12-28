@@ -1,7 +1,7 @@
 toDo.factory('Delete', ['$http', function($http) {
   return {
-    remove: function(toDo) {
-      return $http.post('/delete', toDo);
+    remove: function(selection) {
+      return $http.post('/delete', selection);
     }
   }
 }])

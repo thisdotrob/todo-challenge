@@ -43,11 +43,19 @@ exports.edit = function(req, res) {
 }
 
 exports.delete = function(req, res) {
-  ToDo.remove({_id: req.body._id}, function(err) {
-    if(err) {
-      res.json(err);
-    } else {
-      res.status(200).json('success');
+  var trueIds = [];
+  var ids = req.body;
+  for (var id in ids) {
+    if (ids.hasOwnProperty(id) && ids[id] === true) {
+      trueIds.push(id);
     }
+  }
+  trueIds.forEach(function(id) {
+    ToDo.findByIdAndRemove(id, function(err) {
+      if (err) {
+        console.log(err);
+      }
+    });
   })
+  res.sendStatus(200);
 }

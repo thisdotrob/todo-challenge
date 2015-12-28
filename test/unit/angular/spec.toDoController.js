@@ -123,8 +123,12 @@ describe('ToDoController', function() {
   });
 
   it('delegates deleting todos to the delete factory', function() {
-    ctrl.delete(toDo);
-    expect(deleteSpy.remove).toHaveBeenCalledWith(toDo);
+    ctrl.selection = {
+      01234: true,
+      56789: false
+    };
+    ctrl.delete();
+    expect(deleteSpy.remove).toHaveBeenCalledWith(ctrl.selection);
   });
 
   it('refreshes the list of todos after deleting', function() {

@@ -77,13 +77,15 @@ describe('ToDo app', function() {
 
     it('can delete a task', function(done) {
       browser.get('http://localhost:8080');
-      var elements = element.all(by.repeater('toDo in ctrl.toDos'));
-      elements.first().element(by.css('.delete-btn')).click().then(function() {
-        elements.count().then(function(count) {
-          expect(count).toEqual(2);
-          done();
+      var elements = element.all(by.repeater('toDo in ctrl.toDos'))
+      elements.first().element(by.css('.checkbox')).click().then(function() {
+        element(by.css('.delete-btn')).click().then(function() {
+          elements.count().then(function(count) {
+            expect(count).toEqual(2);
+            done();
+          })
         })
-      });
+      })
     });
 
     it('can edit a task', function(done) {

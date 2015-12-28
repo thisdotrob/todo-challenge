@@ -56,7 +56,9 @@ describe('controller', function() {
   it('deletes a todo', function(done) {
     ToDo.create({task: 'task0', category: 'category0'}, cb);
     function cb(err, createdToDo) {
-      client.post('/delete', createdToDo, function(err, res, body) {
+      var data = {};
+      data[createdToDo.id] = true;
+      client.post('/delete', data, function(err, res, body) {
         res.statusCode.should.equal(200);
         ToDo.count({}, function(err, count) {
           count.should.equal(0);
