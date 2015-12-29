@@ -1,4 +1,4 @@
-toDo.controller('ToDoController', ['New', 'Get', 'Delete', 'Edit', '$http', function(New, Get, Delete, Edit, $http) {
+toDo.controller('ToDoController', ['New', 'Get', 'Delete', 'Edit', 'Complete', '$http', function(New, Get, Delete, Edit, Complete, $http) {
 
   var self = this;
 
@@ -41,6 +41,13 @@ toDo.controller('ToDoController', ['New', 'Get', 'Delete', 'Edit', '$http', func
 
   self.delete = function() {
     Delete.remove(self.selection).then(self.list);
+  }
+
+  self.markComplete = function() {
+    Complete.mark(self.selection).then(function() {
+      self.selection = {};
+      self.list();
+    });
   }
 
   self.init();

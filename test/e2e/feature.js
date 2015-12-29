@@ -88,6 +88,20 @@ describe('ToDo app', function() {
       })
     });
 
+    it('can mark a task as completed', function(done) {
+      browser.get('http://localhost:8080');
+      var elem = element.all(by.repeater('toDo in ctrl.toDos')).last();
+      elem.element(by.css('.checkbox')).click().then(function() {
+        element(by.css('.completed-btn')).click().then(function() {
+          var todo = elem.element(by.css('.task'));
+          todo.getCssValue('text-decoration').then(function(value) {
+            expect(value).toEqual('line-through');
+            done();
+          })
+        })
+      })
+    })
+
     it('can edit a task', function(done) {
       var task = 'I need to do this differently';
       var category = 'Some other category';

@@ -3,7 +3,8 @@ var Schema = mongoose.Schema;
 
 var toDoSchema = new Schema({
   task: String,
-  category: String
+  category: String,
+  complete: Boolean
 });
 
 module.exports = mongoose.model('ToDo', toDoSchema);

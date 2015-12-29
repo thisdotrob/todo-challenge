@@ -59,3 +59,21 @@ exports.delete = function(req, res) {
   })
   res.sendStatus(200);
 }
+
+exports.complete = function(req, res) {
+    var trueIds = [];
+    var ids = req.body;
+    for (var id in ids) {
+      if (ids.hasOwnProperty(id) && ids[id] === true) {
+        trueIds.push(id);
+      }
+    }
+    trueIds.forEach(function(id) {
+      ToDo.findByIdAndUpdate(id, {complete: true}, function(err) {
+        if(err) {
+          console.log(err);
+        }
+      })
+    })
+    res.sendStatus(200);
+}

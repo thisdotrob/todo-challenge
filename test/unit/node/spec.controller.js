@@ -87,4 +87,19 @@ describe('controller', function() {
     }
   });
 
+  it('marks todos as complete', function(done) {
+    ToDo.create({task: 'task0', category: 'category0', complete: false}, cb);
+    function cb(err, createdToDo) {
+      var data = {}
+      data[createdToDo.id] = true;
+      client.post('/complete', data, function(err, res, body) {
+        res.statusCode.should.equal(200);
+        ToDo.findById(createdToDo.id, function(err, found) {
+          found.complete.should.equal(true);
+          done();
+        })
+      })
+    }
+  })
+
 });

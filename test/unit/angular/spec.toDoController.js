@@ -8,6 +8,7 @@ describe('ToDoController', function() {
   var getSpy = jasmine.createSpyObj('getSpy', ['toDos']);
   var deleteSpy = jasmine.createSpyObj('deleteSpy', ['remove']);
   var editSpy = jasmine.createSpyObj('editSpy', ['select', 'save']);
+  var completeSpy = jasmine.createSpyObj('completeSpy', ['mark']);
 
   var toDo = {
     task: 'Thing to do',
@@ -21,6 +22,7 @@ describe('ToDoController', function() {
     newSpy.toDo.and.returnValue($q.when({}));
     deleteSpy.remove.and.returnValue($q.when({}));
     editSpy.save.and.returnValue($q.when({}));
+    completeSpy.mark.and.returnValue($q.when({}));
   }));
 
   beforeEach(inject(function($rootScope, $controller) {
@@ -31,6 +33,7 @@ describe('ToDoController', function() {
       Get: getSpy,
       Delete: deleteSpy,
       Edit: editSpy,
+      Complete: completeSpy
     });
   }));
 
@@ -124,8 +127,8 @@ describe('ToDoController', function() {
 
   it('delegates deleting todos to the delete factory', function() {
     ctrl.selection = {
-      01234: true,
-      56789: false
+      '01234': true,
+      '56789': false
     };
     ctrl.delete();
     expect(deleteSpy.remove).toHaveBeenCalledWith(ctrl.selection);
@@ -133,9 +136,35 @@ describe('ToDoController', function() {
 
   it('refreshes the list of todos after deleting', function() {
     spyOn(ctrl, 'list');
-    ctrl.delete(toDo);
+    ctrl.delete();
     scope.$apply();
     expect(ctrl.list).toHaveBeenCalled();
   });
+
+  it('delegates marking todos as complete to the complete factory', function() {
+    ctrl.selection = {
+      '01234': true,
+      '56789': false
+    };
+    ctrl.markComplete();
+    expect(completeSpy.mark).toHaveBeenCalledWith(ctrl.selection);
+  });
+
+  it('refreshes the list of todos after marking complete', function() {
+    spyOn(ctrl, 'list');
+    ctrl.markComplete();
+    scope.$apply();
+    expect(ctrl.list).toHaveBeenCalled();
+  });
+
+  it('resets the selection after marking complete', function() {
+    ctrl.selection = {
+      '01234': true,
+      '56789': false
+    };
+    ctrl.markComplete();
+    scope.$apply();
+    expect(ctrl.selection).toEqual({});
+  })
 
 });
