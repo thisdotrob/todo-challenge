@@ -18,8 +18,8 @@
         <div class="clearfix"></div>
       </div>
 
-      <div class="panel-body" id="todo-list" ng-repeat="toDo in ctrl.filteredToDos">
-        <div class="checkbox">
+      <div class="panel-body">
+        <div class="checkbox" id="todo-list" ng-repeat="toDo in ctrl.filteredToDos">
           <label>
             <input type="checkbox" ng-model="ctrl.selection[toDo._id]">
             <span class="task" ng-style="{ 'text-decoration': toDo.complete === true ? 'line-through' : 'none' }">{{toDo.task}}</span>
