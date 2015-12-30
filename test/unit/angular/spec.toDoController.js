@@ -5,20 +5,41 @@ describe('ToDoController', function() {
   var scope;
 
   var newSpy = jasmine.createSpyObj('newSpy', ['toDo']);
-  var getSpy = jasmine.createSpyObj('getSpy', ['toDos']);
+  var getSpy = jasmine.createSpyObj('getSpy', ['toDos', 'categories', 'filteredToDos']);
   var deleteSpy = jasmine.createSpyObj('deleteSpy', ['remove']);
   var editSpy = jasmine.createSpyObj('editSpy', ['select', 'save']);
   var completeSpy = jasmine.createSpyObj('completeSpy', ['mark']);
 
-  var toDo = {
-    task: 'Thing to do',
-    category: 'A category'
-  };
+  var sampleToDos = [
+    {
+      task: "task0",
+      category: "category0"
+    },
+    {
+      task: "task1",
+      category: "category0"
+    },
+    {
+      task: "task2",
+      category: "category1"
+    }
+  ];
+
+  var filteredToDos = [
+    {
+      task: "task2",
+      category: "category1"
+    }
+  ];
+
+  var categories = ['category0', 'category1'];
 
   beforeEach(module('ToDo'));
 
   beforeEach(inject(function($q) {
-    getSpy.toDos.and.returnValue($q.when({data: [toDo]}));
+    getSpy.toDos.and.returnValue($q.when({data: sampleToDos}));
+    getSpy.categories.and.returnValue(categories);
+    getSpy.filteredToDos.and.returnValue(filteredToDos);
     newSpy.toDo.and.returnValue($q.when({}));
     deleteSpy.remove.and.returnValue($q.when({}));
     editSpy.save.and.returnValue($q.when({}));
@@ -48,7 +69,7 @@ describe('ToDoController', function() {
 
   it('gets pre-entered todos when initialised', function() {
     expect(getSpy.toDos).toHaveBeenCalled();
-    expect(ctrl.toDos).toEqual([toDo]);
+    expect(ctrl.toDos).toEqual(sampleToDos);
   });
 
   it('initialises with the new and edit dialogues hidden', function() {
@@ -56,13 +77,48 @@ describe('ToDoController', function() {
     expect(ctrl.creating).toBeFalsy();
   });
 
+  it('gets the unique list of categories', function() {
+    expect(getSpy.categories).toHaveBeenCalledWith(sampleToDos);
+    expect(ctrl.categories).toEqual(categories);
+  });
+
+  it('is initialised with no filter', function() {
+    expect(ctrl.selectedCategory).toEqual('All');
+  })
+
+  it('filters todos by the selected category', function() {
+    var options = {
+      toDos: sampleToDos,
+      category: 'category1'
+    }
+    ctrl.selectedCategory = options.category;
+    ctrl.toDos = options.toDos;
+    ctrl.filterToDos();
+    expect(getSpy.filteredToDos).toHaveBeenCalledWith(options);
+    expect(ctrl.filteredToDos).toEqual(filteredToDos);
+  })
+
   it('delegates requesting todos to the list factory', function() {
     ctrl.toDos = null;
     ctrl.list();
     scope.$apply();
     expect(getSpy.toDos).toHaveBeenCalled();
-    expect(ctrl.toDos).toEqual([toDo]);
+    expect(ctrl.toDos).toEqual(sampleToDos);
   });
+
+  it('refreshes the list of categories when requesting todos', function() {
+    spyOn(ctrl, 'getCategories');
+    ctrl.list();
+    scope.$apply();
+    expect(ctrl.getCategories).toHaveBeenCalled();
+  });
+
+  it('applies the selected filter when requesting todos', function() {
+    spyOn(ctrl, 'filterToDos');
+    ctrl.list();
+    scope.$apply();
+    expect(ctrl.filterToDos).toHaveBeenCalled();
+  })
 
   it('displays the new dialogue whilst creating a todo', function() {
       ctrl.new();

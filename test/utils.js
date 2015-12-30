@@ -29,7 +29,9 @@ exports.seedDB = function(done) {
   var numberToSeed = 3;
   for (var i = 0; i < numberToSeed; i++) {
     ToDo.create({
-      task: 'Task ' + i
+      task: 'Task ' + i,
+      category: 'Category ' + i,
+      completed: false
     }, function() {
       count++;
       if(count === numberToSeed) {

@@ -2,7 +2,6 @@ var utils = require('./../utils');
 var ToDo = require('mongoose').model('ToDo');
 
 describe('ToDo app', function() {
-
   it('has the correct title', function() {
     browser.get('http://localhost:8080');
     expect(browser.getTitle()).toEqual('ToDo');
@@ -17,7 +16,6 @@ describe('ToDo app', function() {
   })
 
   describe('No ToDo\'s in the database', function() {
-
     beforeEach(function (done) {utils.clearDB(done)});
     afterEach(function (done) {utils.disconnectDB(done)});
 
@@ -42,7 +40,6 @@ describe('ToDo app', function() {
   });
 
   describe('Pre-existing ToDo\'s in the database', function() {
-
     beforeEach(function (done) {
       utils.clearDB(function() {
         utils.seedDB(function() {
@@ -57,7 +54,7 @@ describe('ToDo app', function() {
 
     it('displays pre-entered tasks on page load', function(done) {
       browser.get('http://localhost:8080');
-      var elements = element.all(by.repeater('toDo in ctrl.toDos'));
+      var elements = element.all(by.repeater('toDo in ctrl.filteredToDos'));
       elements.count().then(function(count) {
         var resultsPushed = 0;
         var results = [];
@@ -77,7 +74,7 @@ describe('ToDo app', function() {
 
     it('can delete a task', function(done) {
       browser.get('http://localhost:8080');
-      var elements = element.all(by.repeater('toDo in ctrl.toDos'))
+      var elements = element.all(by.repeater('toDo in ctrl.filteredToDos'))
       elements.first().element(by.css('.checkbox')).click().then(function() {
         element(by.css('.delete-btn')).click().then(function() {
           elements.count().then(function(count) {
@@ -90,7 +87,7 @@ describe('ToDo app', function() {
 
     it('can mark a task as completed', function(done) {
       browser.get('http://localhost:8080');
-      var elem = element.all(by.repeater('toDo in ctrl.toDos')).last();
+      var elem = element.all(by.repeater('toDo in ctrl.filteredToDos')).last();
       elem.element(by.css('.checkbox')).click().then(function() {
         element(by.css('.completed-btn')).click().then(function() {
           var todo = elem.element(by.css('.task'));
@@ -106,7 +103,7 @@ describe('ToDo app', function() {
       var task = 'I need to do this differently';
       var category = 'Some other category';
       browser.get('http://localhost:8080');
-      var toDo = element.all(by.repeater('toDo in ctrl.toDos')).last();
+      var toDo = element.all(by.repeater('toDo in ctrl.filteredToDos')).last();
       toDo.element(by.css('.edit-btn')).click().then(enterDetails);
 
       function enterDetails() {
@@ -130,6 +127,19 @@ describe('ToDo app', function() {
             expect(text).toEqual(category);
             done();
           })
+        })
+      }
+    })
+
+    it('can filter tasks by category', function(done) {
+      browser.get('http://localhost:8080');
+      var select = element(by.id('category-dropdown'));
+      select.$('[value="Category 0"]').click().then(evaluate);
+      function evaluate(){
+        var todos = element.all(by.repeater('toDo in ctrl.filteredToDos'));
+        todos.count().then(function(count) {
+          expect(count).toEqual(1);
+          done();
         })
       }
     })
