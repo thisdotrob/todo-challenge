@@ -29,10 +29,7 @@ describe('ToDo app', function() {
         element(by.css('.add-btn')).click().then(function() {
           element(by.css('.task')).getText().then(function(text) {
             expect(text).toEqual(task);
-            element(by.css('.category')).getText().then(function(text2) {
-              expect(text2).toEqual(category);
-              done();
-            })
+            done();
           });
         })
       })
@@ -75,7 +72,7 @@ describe('ToDo app', function() {
     it('can delete a task', function(done) {
       browser.get('http://localhost:8080');
       var elements = element.all(by.repeater('toDo in ctrl.filteredToDos'))
-      elements.first().element(by.css('.checkbox')).click().then(function() {
+      elements.first().element(by.css('.task')).click().then(function() {
         element(by.css('.delete-btn')).click().then(function() {
           elements.count().then(function(count) {
             expect(count).toEqual(2);
@@ -88,7 +85,7 @@ describe('ToDo app', function() {
     it('can mark a task as completed', function(done) {
       browser.get('http://localhost:8080');
       var elem = element.all(by.repeater('toDo in ctrl.filteredToDos')).last();
-      elem.element(by.css('.checkbox')).click().then(function() {
+      elem.element(by.css('.task')).click().then(function() {
         element(by.css('.completed-btn')).click().then(function() {
           var todo = elem.element(by.css('.task'));
           todo.getCssValue('text-decoration').then(function(value) {
@@ -123,10 +120,7 @@ describe('ToDo app', function() {
       function evaluate() {
         toDo.element(by.css('.task')).getText().then(function(text) {
           expect(text).toEqual(task);
-          toDo.element(by.css('.category')).getText().then(function(text) {
-            expect(text).toEqual(category);
-            done();
-          })
+          done();
         })
       }
     })

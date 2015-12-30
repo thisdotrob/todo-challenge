@@ -6,40 +6,73 @@
 
 <body ng-controller="ToDoController as ctrl">
 
-<button class="new-btn" ng-click="ctrl.new()">New</button>
+  <div class="col-sm-4">
+    <div class="panel panel-default">
 
-<ul id="todo-list" ng-repeat="toDo in ctrl.filteredToDos">
-  <li>
-    <input class="checkbox" type="checkbox" ng-model="ctrl.selection[toDo._id]">
-    <span class="task" ng-style="{ 'text-decoration': toDo.complete === true ? 'line-through' : 'none' }">{{toDo.task}}</span>
-    <span class="category">{{toDo.category}}</span>
-    <button class="edit-btn" ng-click="ctrl.edit(toDo)">Edit</button>
-  </li>
-</ul>
+      <div class="panel-heading">
+        <h3 class="panel-title pull-left">Stuff to do!</h3>
+        <select class="pull-right" id="category-dropdown" ng-model="ctrl.selectedCategory" ng-change="ctrl.filterToDos()">
+          <option>All</option>
+          <option ng-repeat="category in ctrl.categories">{{category}}</option>
+        </select>
+        <div class="clearfix"></div>
+      </div>
 
-<button class="delete-btn" ng-click="ctrl.delete()">Delete</button>
+      <div class="panel-body" id="todo-list" ng-repeat="toDo in ctrl.filteredToDos">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" ng-model="ctrl.selection[toDo._id]">
+            <span class="task" ng-style="{ 'text-decoration': toDo.complete === true ? 'line-through' : 'none' }">{{toDo.task}}</span>
+          </label>
+          <a href="" class="edit-btn">
+            <span class="glyphicon glyphicon-pencil" aria-hidden="true" ng-click="ctrl.edit(toDo)"></span>
+          </a>
+        </div>
+      </div>
 
-<button class="completed-btn" ng-click="ctrl.markComplete()">Mark complete</button>
+      <div class="panel-footer">
+        <div class="btn-group pull-left">
+          <button class="delete-btn" ng-click="ctrl.delete()">Delete selected</button>
+          <button class="completed-btn" ng-click="ctrl.markComplete()">Mark complete</button>
+        </div>
+        <div class="btn-group pull-right">
+          <button class="new-btn" ng-click="ctrl.new()">Create new</button>
+        </div>
+        <div class="clearfix"></div>
+      </div>
 
-<select id="category-dropdown" ng-model="ctrl.selectedCategory" ng-change="ctrl.filterToDos()">
-  <option>All</option>
-  <option ng-repeat="category in ctrl.categories">{{category}}</option>
-</select>
+    </div>
 
-<div id="edit-dialogue" ng-show="ctrl.editing">
-  <form>
-    <input ng-model="ctrl.editedTask"></input>
-    <input ng-model="ctrl.editedCategory"></input>
-    <button class="save-btn" ng-click="ctrl.save()">Save</button>
-  </form>
-</div>
+    <div id="edit-dialogue" ng-show="ctrl.editing">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <form>
+            Task:
+            <input ng-model="ctrl.editedTask"></input>
+            Category:
+            <input ng-model="ctrl.editedCategory"></input>
+            <button class="save-btn" ng-click="ctrl.save()">Save</button>
+          </form>
+        </div>
+      </div>
+    </div>
 
-<div id="new-dialogue" ng-show="ctrl.creating">
-  <form>
-    <input ng-model="ctrl.task"></input>
-    <input ng-model="ctrl.category"></input>
-    <button class="add-btn" ng-click="ctrl.add()">Add</button>
-  </form>
-</div>
+    <div id="new-dialogue" ng-show="ctrl.creating">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <form>
+            Task:
+            <input ng-model="ctrl.task"></input>
+            Category:
+            <input ng-model="ctrl.category"></input>
+            <div class="btn-group pull-right">
+              <button class="add-btn" ng-click="ctrl.add()">Add</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
 
 </body>
