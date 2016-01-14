@@ -8,6 +8,7 @@ My solution to the seventh Makers Academy weekend challenge. The task was to bui
 Install the following: [MongoDB](https://docs.mongodb.org/manual/installation/), [Node](https://nodejs.org/en/) & [Bower](http://bower.io/)
 
 Then:
+
 0. ```git clone git@github.com:thisdotrob/todo_challenge.git```
 0. ```npm install```
 0. ```bower install```
